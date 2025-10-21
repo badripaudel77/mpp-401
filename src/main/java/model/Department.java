@@ -3,7 +3,7 @@ package model;
 import java.util.List;
 
 public class Department {
-    private Long id;
+    private int id;
     private String name;
     private String location;
     private double annualBudget;
@@ -13,8 +13,10 @@ public class Department {
 
     public Department() {
     }
-
-    public Department(Long id, String name, String location, double annualBudget,
+    public Department(int id) {
+        this.id = id;
+    }
+    public Department(int id, String name, String location, double annualBudget,
                       List<Employee> employees, List<Project> projects) {
         this.id = id;
         this.name = name;
@@ -24,11 +26,11 @@ public class Department {
         this.projects = projects;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

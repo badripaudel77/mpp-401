@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class Employee {
-    private Long id;
+    private int id;
     private String email;
     private String fullName;
     private String title;
@@ -18,7 +18,7 @@ public class Employee {
     // Constructors
     public Employee() {}
 
-    public Employee(Long id, String email, String fullName, String title,
+    public Employee(int id, String fullName, String email, String title,
                     LocalDate hireDate, double salary) {
         this.id = id;
         this.email = email;
@@ -29,10 +29,10 @@ public class Employee {
     }
 
     // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
-    public Long getEmail() { return id; }
+    public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
 
     public String getFullName() { return fullName; }
