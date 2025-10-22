@@ -157,8 +157,8 @@ public class ClientController {
 
     private static void viewClientsByProjectDeadline() {
         System.out.print("Enter the deadline days from now: ");
-        int id = getIntInput();
-        clientService.findClientsByUpcomingProjectDeadline(id)
+        int days = getIntInput();
+        clientService.findClientsByUpcomingProjectDeadline(days)
                 .stream()
                 .map(c -> String.format("ID: %d | %s | %s | %s | %s",
                         c.getId(), c.getName(), c.getIndustry(), c.getContactPerson(), c.getContactEmail()))
