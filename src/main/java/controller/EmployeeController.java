@@ -65,34 +65,35 @@ public class EmployeeController {
                     case 2:
                         List<Employee> employees = service.findAll();
                         System.out.println("\nAll Employees:");
-                        for (Employee e : employees) {
-                            System.out.println(
-                                    e.getId() + " | " +
-                                            e.getFullName() + " | " +
-                                            e.getEmail() + " | " +
-                                            e.getTitle() + " | " +
-                                            e.getSalary() + " | " +
-                                            (e.getDepartment() != null ? e.getDepartment().getId() : "N/A")
-                            );
-                        }
+                        employees
+                                .forEach(e -> System.out.println(
+                                        e.getId() + " | " +
+                                                e.getFullName() + " | " +
+                                                e.getEmail() + " | " +
+                                                e.getTitle() + " | " +
+                                                e.getSalary() + " | " +
+                                                (e.getDepartment() != null ? e.getDepartment().getId() : "N/A")
+                                ));
                         break;
 
                     case 3:
                         System.out.print("Enter Employee ID: ");
                         int id = Integer.parseInt(scanner.nextLine());
                         Employee found = service.findById(id);
-                        if (found != null) {
-                            System.out.println(
-                                    found.getId() + " | " +
-                                            found.getFullName() + " | " +
-                                            found.getEmail() + " | " +
-                                            found.getTitle() + " | " +
-                                            found.getSalary() + " | " +
-                                            (Optional.of(found.getDepartment().getId()).orElse(-111))
-                            );
-                        } else {
-                            System.out.println("Employee not found.");
-                        }
+                        Optional.ofNullable(found)
+                                .ifPresentOrElse(
+                                        e -> System.out.println(
+                                                e.getId() + " | " +
+                                                        e.getFullName() + " | " +
+                                                        e.getEmail() + " | " +
+                                                        e.getTitle() + " | " +
+                                                        e.getSalary() + " | " +
+                                                        Optional.ofNullable(e.getDepartment())
+                                                                .map(Department::getId)
+                                                                .orElse(-111)
+                                        ),
+                                        () -> System.out.println("Employee not found.")
+                                );
                         break;
 
                     case 4:

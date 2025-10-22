@@ -158,11 +158,12 @@ public class ClientController {
     private static void viewClientsByProjectDeadline() {
         System.out.print("Enter the deadline days from now: ");
         int id = getIntInput();
-        List<Client> clientsByUpcomingProjectDeadline = clientService.findClientsByUpcomingProjectDeadline(id);
-        clientsByUpcomingProjectDeadline.stream()
-                .forEach(client -> System.out.print(client.getId() +
-                        " | " + client.getName() + " | " + client.getIndustry() + " | " +
-                        client.getContactPerson() + " | " + client.getContactEmail()));
+        clientService.findClientsByUpcomingProjectDeadline(id)
+                .stream()
+                .map(c -> String.format("ID: %d | %s | %s | %s | %s",
+                        c.getId(), c.getName(), c.getIndustry(), c.getContactPerson(), c.getContactEmail()))
+                .forEach(System.out::println);
+
     }
 
     private static void viewAllClients() throws SQLException {

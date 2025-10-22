@@ -139,14 +139,14 @@ public class ClientRepository {
         FROM client c
         JOIN project_client pc ON c.id = pc.client_id
         JOIN project p ON pc.project_id = p.id
-        WHERE p.end_date BETWEEN CURRENT_DATE AND (CURRENT_DATE + (? * INTERVAL '1000 day'))
+        WHERE p.end_date BETWEEN CURRENT_DATE AND (CURRENT_DATE + (? * INTERVAL '1 day'))
         """;
         List<Client> clients = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, daysUntilDeadline);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    clients.add(mapRowToClient(rs));
+                    Optional.of(mapRowToClient(rs)).ifPresent(clients::add);
                 }
             }
         }
