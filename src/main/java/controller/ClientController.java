@@ -27,6 +27,7 @@ public class ClientController {
             System.out.println("3. Delete Client");
             System.out.println("4. View Client By ID");
             System.out.println("5. View All Clients");
+            System.out.println("6. Clients By Deadline");
             System.out.println("0. Exit");
             System.out.print("Choose an option: ");
 
@@ -39,6 +40,7 @@ public class ClientController {
                     case 3 -> deleteClient();
                     case 4 -> viewClientById();
                     case 5 -> viewAllClients();
+                    case 6 -> viewClientsByProjectDeadline();
                     case 0 -> {
                         System.out.println("Exiting Client Menu...");
                         return;
@@ -151,6 +153,16 @@ public class ClientController {
                         .stream()
                         .map(Project::getName)
                         .forEach(p -> System.out.println("-" + p));
+    }
+
+    private static void viewClientsByProjectDeadline() {
+        System.out.print("Enter the deadline days from now: ");
+        int id = getIntInput();
+        List<Client> clientsByUpcomingProjectDeadline = clientService.findClientsByUpcomingProjectDeadline(id);
+        clientsByUpcomingProjectDeadline.stream()
+                .forEach(client -> System.out.print(client.getId() +
+                        " | " + client.getName() + " | " + client.getIndustry() + " | " +
+                        client.getContactPerson() + " | " + client.getContactEmail()));
     }
 
     private static void viewAllClients() throws SQLException {

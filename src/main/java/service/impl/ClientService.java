@@ -38,4 +38,11 @@ public class ClientService implements CrudService<Client, Long> {
     public void delete(Long id) throws SQLException {
         repository.delete(id);
     }
+
+    public List<Client> findClientsByUpcomingProjectDeadline(int daysUntilDeadline) {
+        if (daysUntilDeadline <= 0) {
+            throw new IllegalArgumentException("Days until deadline must be positive.");
+        }
+        return repository.findClientsByUpcomingProjectDeadline(daysUntilDeadline);
+    }
 }

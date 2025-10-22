@@ -38,4 +38,13 @@ public class ProjectService implements CrudService<Project, Long> {
     public void delete(Long id) throws SQLException {
         repository.delete(id);
     }
+
+    public double calculateProjectHRCost(int projectId) throws SQLException {
+        return repository.calculateProjectHRCost(projectId);
+    }
+
+    public List<Project> getProjectsByDepartment(int departmentId, String sortBy) throws SQLException {
+        var projectsByDepartment = repository.findProjectsByDepartmentId((long) departmentId, sortBy);
+        return projectsByDepartment;
+    }
 }

@@ -21,7 +21,8 @@ public class EmployeeController {
             System.out.println("2. List All Employees");
             System.out.println("3. Find Employee by ID");
             System.out.println("4. Delete Employee by ID");
-            System.out.println("5. Exit");
+            System.out.println("5. Transfer Employee to another department");
+            System.out.println("6. Exit");
             System.out.print("Select option: ");
 
             int choice = Integer.parseInt(scanner.nextLine());
@@ -106,6 +107,25 @@ public class EmployeeController {
                         break;
 
                     case 5:
+                        System.out.print("Enter Employee ID to transfer: ");
+                        int eId = Integer.parseInt(scanner.nextLine());
+
+                        System.out.print("Enter Department ID to transfer to: ");
+                        int dId = Integer.parseInt(scanner.nextLine());
+                        if (eId >= 0 && dId>=0) {
+                            boolean success = service.transferEmployeeToDepartment(eId, dId);
+                            if (success) {
+                                System.out.println("Employee transferred to another department");
+                            } else {
+                                System.out.println("Something went wrong, couldn't transfer employee : " + eId);
+                            }
+                        }
+                        else {
+                            System.out.println("Invalid IDs");
+                        }
+                        break;
+
+                    case 6:
                         System.out.println("Exiting...");
                         return;
 

@@ -46,4 +46,8 @@ public class EmployeeService implements CrudService<Employee, Integer> {
         return this.repository.findByDepartment(id);
     }
 
+    public boolean transferEmployeeToDepartment(int employeeId, int newDepartmentId) {
+        return this.repository.transferEmployeeToDepartment(employeeId, newDepartmentId);
+    }
+
 }

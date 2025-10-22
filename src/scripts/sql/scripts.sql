@@ -56,9 +56,9 @@ CREATE TABLE if not exists project (
 
 INSERT INTO project (name, description, start_date, end_date, budget, status)
 VALUES
-    ('Website Revamp', 'Redesign the corporate website.', '2024-01-01', '2024-06-30', 150000.00, 'Active'),
-    ('Mobile App', 'Develop a new mobile application.', '2024-02-15', '2024-09-30', 200000.00, 'Active'),
-    ('Marketing Campaign', 'Launch Q3 marketing campaign.', '2024-03-01', '2024-08-31', 50000.00, 'Planned')
+    ('Website Revamp', 'Redesign the corporate website.', '2025-10-29', '2026-06-30', 150000.00, 'Active'),
+    ('Mobile App', 'Develop a new mobile application.', '2024-02-15', '2026-09-30', 200000.00, 'Active'),
+    ('Marketing Campaign', 'Launch Q3 marketing campaign.', '2024-03-01', '2025-11-31', 50000.00, 'Planned')
 ON CONFLICT (name) DO NOTHING;
 -- select * from project;
 

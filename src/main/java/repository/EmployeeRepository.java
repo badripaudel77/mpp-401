@@ -140,4 +140,17 @@ public class EmployeeRepository {
         }
         return employees;
     }
+
+    public boolean transferEmployeeToDepartment(int employeeId, int newDepartmentId) {
+        var query = "UPDATE employee SET department_id = ? WHERE id = ?;";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, newDepartmentId);
+            ps.setInt(2, employeeId);
+            return ps.executeUpdate() > 0;
+        }
+        catch (SQLException e) {
+            System.out.println("Couldn't transfer department because of : " + e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
 }
