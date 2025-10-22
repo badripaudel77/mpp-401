@@ -42,4 +42,8 @@ public class EmployeeService implements CrudService<Employee, Integer> {
         return this.repository.findAll();
     }
 
+    public List<Employee> findByDepartment(Long id) throws SQLException {
+        return this.repository.findByDepartment(id);
+    }
+
 }

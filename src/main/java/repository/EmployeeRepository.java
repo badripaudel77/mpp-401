@@ -98,17 +98,18 @@ public class EmployeeRepository {
     }
 
 
-    // FIND by department's name
-    public List<Employee> findByDepartment(String deptName) throws SQLException {
+    // FIND by department's ID
+    public List<Employee> findByDepartment(Long id) throws SQLException {
         String sql = "SELECT e.* FROM employee e " +
                 "JOIN department d ON e.department_id = d.id " +
-                "WHERE d.name = ?";
+                "WHERE d.id = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, deptName);
+            ps.setLong(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 var employees = mapToEmployeeList(rs);
-                System.out.println("Employee in department : " + deptName + " fetched.");
+                System.out.println("Employee in department : " + id + " fetched.");
+                return employees;
             }
             catch (SQLException exception) {
                 System.out.println("Something went wrong : " + exception.getMessage());

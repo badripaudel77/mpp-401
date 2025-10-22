@@ -133,6 +133,22 @@ VALUES
 ON CONFLICT (project_id, client_id) DO NOTHING;
 -- select * from project_client;
 
+--create project department table
+CREATE TABLE IF NOT EXISTS department_project (
+          department_id INT NOT NULL REFERENCES department(id) ON DELETE CASCADE,
+          project_id INT NOT NULL REFERENCES project(id) ON DELETE CASCADE,
+          PRIMARY KEY (department_id, project_id)
+);
+INSERT INTO department_project (department_id, project_id)
+VALUES
+    (1, 1),
+    (1, 2),
+    (2, 2),
+    (2, 3),
+    (3, 1)
+ON CONFLICT (department_id, project_id) DO NOTHING;
+-- select * from department_project;
+
 
 
 
