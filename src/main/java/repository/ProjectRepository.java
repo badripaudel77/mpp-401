@@ -1,17 +1,18 @@
 package repository;
 
 import config.DBConfig;
+import model.Client;
+import model.Department;
 import model.Project;
 import model.ProjectStatus;
+import service.impl.DepartmentService;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 public class ProjectRepository {
     private static final Connection connection;
@@ -38,21 +39,62 @@ public class ProjectRepository {
 
     public Project findById(Long id) {
         // find the project
-        // find it's associated departments
-        // associated clients
+        var query = "SELECT * FROM project WHERE id = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setLong(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()){
+                Project project = mapRowToProject(resultSet);
+                // find it's associated departments
+                project.setDepartments(findDepartmentsByProjectId(id));
+                // associated clients
+                project.setClients(findClientsByProjectId(id));
+
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
         return null;
     }
 
-    public List<Project> findAll() {
-        return null;
+    public List<Project> findAll() throws SQLException{
+        String sql = "SELECT * FROM project";
+        List<Project> projects = new ArrayList<>();
+        try (Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(sql);
+            while (resultSet.next()){
+                projects.add(mapRowToProject(resultSet));
+            }
+        }
+        return projects;
     }
 
-    public void update(Project entity, Long id) {
-
+    public void update(Project entity, Long id) throws SQLException{
+        String sql = "UPDATE project SET name = ?, description = ?, start_date = ?, end_date = ?, budget = ?, " +
+                "status = ? WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)){
+            statement.setString(1, entity.getName());
+            statement.setString(2, entity.getDescription());
+            statement.setDate(3, Date.valueOf(entity.getStartDate()));
+            statement.setDate(4, Date.valueOf(entity.getEndDate()));
+            statement.setDouble(5, entity.getBudget());
+            statement.setString(6, entity.getStatus().getStatus());
+            int rowsAffected = statement.executeUpdate();
+            if (rowsAffected == 0) System.out.println("No project found with id: " + entity.getId());
+        }
     }
 
-    public void delete(Long id) {
-
+    public void delete(Long id) throws SQLException{
+        String sql = "DELETE FROM project WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)){
+            statement.setLong(1, id);
+            int rowsAffected = statement.executeUpdate();
+            Optional.of(rowsAffected > 0)
+                    .map(deleted -> deleted ? "Project deleted:" + id : "No project found with id: " + id)
+                    .ifPresent(System.out::println);
+        }
     }
 
     public double calculateProjectHRCost(int projectId) throws SQLException {
@@ -126,6 +168,68 @@ public class ProjectRepository {
             }
         }
         return projects;
+    }
+
+    private Project mapRowToProject(ResultSet resultSet)throws SQLException{
+        Project project = new Project();
+        project.setId(resultSet.getLong(1));
+        project.setName(resultSet.getString(2));
+        project.setDescription(resultSet.getString(3));
+        project.setStartDate(resultSet.getDate(4).toLocalDate());
+        project.setEndDate(resultSet.getDate(5).toLocalDate());
+        project.setBudget(resultSet.getDouble(6));
+        project.setStatus((ProjectStatus) resultSet.getObject(7));
+        return project;
+    }
+
+    private List<Department> findDepartmentsByProjectId(Long projId) throws SQLException{
+        String sql = """
+                SELECT d.*
+                FROM department d
+                JOIN department_project pd ON d.id = pd.department_id
+                WHERE pd.project_id = ?
+                """;
+        List<Department> departments = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, projId);
+            try (ResultSet resultSet = statement.executeQuery()){
+                while (resultSet.next()){
+                    Department dept = new Department();
+                    dept.setId(resultSet.getInt("id"));
+                    dept.setName(resultSet.getString("name"));
+                    dept.setLocation(resultSet.getString("location"));
+                    dept.setAnnualBudget(resultSet.getDouble("annual_budget"));
+                    departments.add(dept);
+                }
+            }
+        }
+        return departments;
+    }
+
+    private List<Client> findClientsByProjectId(Long projId) throws SQLException{
+        String sql = """
+                SELECT c.* 
+                FROM client c
+                JOIN project_client cp ON c.id = cp.client_id
+                WHERE cp.project_id = ?
+                """;
+        List<Client> clients = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(sql)){
+            statement.setLong(1, projId);
+            try(ResultSet resultSet = statement.executeQuery()){
+                while (resultSet.next()){
+                    Client client = new Client();
+                    client.setId(resultSet.getLong("id"));
+                    client.setName(resultSet.getString("name"));
+                    client.setIndustry(resultSet.getString("industry"));
+                    client.setContactPerson(resultSet.getString("contact_person"));
+                    client.setContactPhone(resultSet.getString("contact_phone"));
+                    client.setContactEmail(resultSet.getString("contact_email"));
+                    clients.add(client);
+                }
+            }
+        }
+        return clients;
     }
 
 }
