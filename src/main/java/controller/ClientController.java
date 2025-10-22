@@ -15,7 +15,7 @@ public class ClientController {
     private static final ClientService clientService = new ClientService();
     private static final Scanner scanner = new Scanner(System.in);
 
-    static void main(String[] args) {
+    public static void main(String[] args) {
         mainMenu();
     }
 

@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.Scanner;
 
 public class EmployeeController {
-     static void main(String[] args) {
+     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
         EmployeeService service = new EmployeeService();

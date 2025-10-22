@@ -14,7 +14,7 @@ public class DepartmentController {
     private static final DepartmentService departmentService = new DepartmentService();
     private static final Scanner scanner = new Scanner(System.in);
 
-    static void main(String[] args) {
+    public static void main(String[] args) {
         mainMenu();
     }
 
