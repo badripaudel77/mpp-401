@@ -1,0 +1,40 @@
+@startuml
+left to right direction
+
+actor "System User" as User
+rectangle "EEMS System" as System {
+
+    usecase "Manage Employees (CRUD)" as UC1
+    usecase "Manage Departments (CRUD)" as UC2
+    usecase "Manage Projects (CRUD)" as UC3
+    usecase "Manage Clients (CRUD)" as UC4
+
+    usecase "Calculate Project HR Cost" as UC5
+    usecase "Get Projects by Department" as UC6
+    usecase "Find High-Value Clients" as UC7
+    usecase "Transfer Employee to Department" as UC8
+    usecase "Generate Reports / Summaries" as UC9
+}
+
+' User interactions
+User --> System
+
+' Use case interactions inside system
+System --> UC1
+System --> UC2
+System --> UC3
+System --> UC4
+System --> UC5
+System --> UC6
+System --> UC7
+System --> UC8
+System --> UC9
+
+' Optional: dependencies between use cases
+UC5 --> UC3
+UC6 --> UC2
+UC7 --> UC4
+UC8 --> UC1
+UC8 --> UC2
+
+@enduml
