@@ -1,8 +1,10 @@
 package model;
 
 public enum ProjectStatus {
-    ACTIVE("ongoing"),
-    COMPLETED("finished");
+    ACTIVE("active"),
+    COMPLETED("completed"),
+    PLANNED("planned");
+
     final String status;
 
     ProjectStatus(String status) {

@@ -5,7 +5,6 @@ import model.Client;
 import model.Department;
 import model.Project;
 import model.ProjectStatus;
-import service.impl.DepartmentService;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -44,18 +43,18 @@ public class ProjectRepository {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()){
+            if (resultSet.next()) {
                 Project project = mapRowToProject(resultSet);
                 // find it's associated departments
                 project.setDepartments(findDepartmentsByProjectId(id));
                 // associated clients
                 project.setClients(findClientsByProjectId(id));
-
+                return project;
             }
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
         return null;
     }
 
@@ -74,15 +73,19 @@ public class ProjectRepository {
     public void update(Project entity, Long id) throws SQLException{
         String sql = "UPDATE project SET name = ?, description = ?, start_date = ?, end_date = ?, budget = ?, " +
                 "status = ? WHERE id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(sql)){
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(7, id);
+
             statement.setString(1, entity.getName());
             statement.setString(2, entity.getDescription());
             statement.setDate(3, Date.valueOf(entity.getStartDate()));
             statement.setDate(4, Date.valueOf(entity.getEndDate()));
             statement.setDouble(5, entity.getBudget());
-            statement.setString(6, entity.getStatus().getStatus());
+            statement.setString(6, (entity.getStatus().name()));
             int rowsAffected = statement.executeUpdate();
-            if (rowsAffected == 0) System.out.println("No project found with id: " + entity.getId());
+            if (rowsAffected == 0) {
+                System.out.println("No project found with id: " + entity.getId());
+            }
         }
     }
 
@@ -178,7 +181,7 @@ public class ProjectRepository {
         project.setStartDate(resultSet.getDate(4).toLocalDate());
         project.setEndDate(resultSet.getDate(5).toLocalDate());
         project.setBudget(resultSet.getDouble(6));
-        project.setStatus((ProjectStatus) resultSet.getObject(7));
+        project.setStatus(ProjectStatus.valueOf(resultSet.getString("status").toUpperCase(Locale.ROOT)));
         return project;
     }
 
