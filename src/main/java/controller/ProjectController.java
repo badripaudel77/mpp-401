@@ -41,6 +41,8 @@ public class ProjectController {
                 System.out.println("4. View Project By ID");
                 System.out.println("5. View All Projects");
                 System.out.println("6. View Projects By Status");
+                System.out.println("7. Calculate Project HR Cost");
+                System.out.println("8. View Projects By Department");
                 System.out.println("0. Exit");
                 System.out.print("Choose an option: ");
 
@@ -54,6 +56,8 @@ public class ProjectController {
                         case 4 -> viewProjectById();
                         case 5 -> viewAllProjects();
                         case 6 -> viewProjectsByStatus();
+                        case 7 -> calculateProjectHRCost();
+                        case 8 -> viewProjectsByDepartment();
                         case 0 -> {
                             System.out.println("Exiting Project Menu...");
                             return;
@@ -215,6 +219,36 @@ public class ProjectController {
                             p.getId(), p.getName(), p.getBudget(),
                             p.getStartDate(), p.getEndDate()));
         }
+
+    private static void calculateProjectHRCost() throws SQLException {
+        System.out.print("Enter project ID: ");
+        int projectId = getIntInput();
+
+        double cost = projectService.calculateProjectHRCost(projectId);
+        System.out.printf("Total HR cost for project ID %d: %.2f%n", projectId, cost);
+    }
+
+
+    private static void viewProjectsByDepartment() throws SQLException {
+        System.out.print("Enter department ID: ");
+        int departmentId = getIntInput();
+
+        System.out.print("Enter sort field (e.g., 'name', 'budget', 'start_date'): ");
+        String sortBy = scanner.nextLine().trim();
+
+        List<Project> projects = projectService.getProjectsByDepartment(departmentId, sortBy);
+
+        if (projects.isEmpty()) {
+            System.out.println("No projects found for this department.");
+            return;
+        }
+
+        System.out.println("\n--- Projects for Department " + departmentId + " ---");
+        projects.forEach(p ->
+                System.out.printf("ID: %d | Name: %s | Budget: %.2f | Status: %s%n",
+                        p.getId(), p.getName(), p.getBudget(), p.getStatus()));
+    }
+
 
         // ------------------- UTILITY METHODS -------------------
 
