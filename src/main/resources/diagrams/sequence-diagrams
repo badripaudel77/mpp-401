@@ -1,0 +1,47 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+title Sequence diagram: calculateProjectHRCost
+
+actor User as U
+participant "ProjectController" as PC
+participant "ProjectService" as PS
+participant "ProjectRepository" as PR
+database "DB" as DB
+
+U -> PC: select option "calculate HR cost"
+activate PC
+
+PC -> PC: getIntInput() → projectId
+PC -> PS: calculateProjectHRCost(projectId)
+activate PS
+
+PS -> PR: calculateProjectHRCost(projectId)
+activate PR
+
+PR -> DB: SELECT start_date, end_date\nFROM project WHERE id = ?
+activate DB
+DB --> PR: start_date, end_date
+deactivate DB
+
+PR -> PR: Calculate duration (daysBetween, months)
+
+PR -> DB: SELECT e.salary, pa.allocation_percentage\nFROM project_allocation pa\nJOIN employee e ON pa.employee_id = e.id\nWHERE pa.project_id = ?
+activate DB
+DB --> PR: salary, allocation_percentage (for each employee)
+deactivate DB
+
+PR -> PR: Calculate total cost = Σ(monthlySalary × allocation × months)
+
+PR --> PS: totalCost
+deactivate PR
+
+PS --> PC: totalCost
+deactivate PS
+
+PC -> PC: System.out.printf("Total HR cost ...", totalCost)
+PC --> U: show result on console
+deactivate PC
+@enduml

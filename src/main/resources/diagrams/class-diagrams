@@ -1,0 +1,146 @@
+@startuml
+class Client {
+    - Long id
+    - String name
+    - String industry
+    - String contactPerson
+    - String contactPhone
+    - String contactEmail
+    - List<Project> projects
+    ---
+    + Client()
+    + getProjects()
+}
+
+class Project
+
+' Many-to-Many relationship between Client and Project
+Client "0..*" -- "0..*" Project
+@enduml
+
+@startuml
+class Department {
+    - int id
+    - String name
+    - String location
+    - double annualBudget
+    - List<Employee> employees
+    - List<Project> projects
+    ---
+    + Department()
+    + getEmployees()
+}
+
+class Employee
+class Project
+
+' Department has many Employees
+Department "1" -- "0..*" Employee
+
+' Department has many Projects
+Department "0..*" -- "0..*" Project
+@enduml
+
+@startuml
+class Employee {
+    - int id
+    - String email
+    - String fullName
+    - String title
+    - LocalDate hireDate
+    - double salary
+    - Department department
+    - List<ProjectAllocation> projects
+    ---
+    + Employee()
+    + getDepartment()
+}
+
+class Department
+class ProjectAllocation
+
+' Employee belongs to one Department
+/'Employee "1" --> "1" Department'/
+
+' Employee works on many ProjectAllocations
+Employee "1" -- "0..*" ProjectAllocation
+@enduml
+
+@startuml
+class Project {
+    - Long id
+    - String name
+    - String description
+    - LocalDate startDate
+    - LocalDate endDate
+    - double budget
+    - ProjectStatus status
+    - List<Department> departments
+    - List<ProjectAllocation> workers
+    - List<Client> clients
+    ---
+    + Project()
+    + getDepartments()
+}
+
+class Department
+class ProjectAllocation
+class Client
+class ProjectStatus
+
+' Many-to-Many relationships
+/'Project "0..*" -- "0..*" Department'/
+Project "1" -- "0..*" ProjectAllocation
+/'Project "0..*" -- "0..*" Client'/
+@enduml
+
+
+@startuml
+class DepartmentProject {
+    - int departmentId
+    - int projectId
+    ---
+    + DepartmentProject()
+    + toString()
+}
+
+class Department
+class Project
+
+' Associations (aggregation by ID)
+DepartmentProject "1" --> "1" Department
+DepartmentProject "1" --> "1" Project
+@enduml
+
+@startuml
+class ProjectClient {
+    - Long projectId
+    - Long clientId
+    ---
+    + ProjectClient()
+}
+
+class Project
+class Client
+
+' Associations (aggregation by ID)
+ProjectClient "1" -- "1" Project
+ProjectClient "1" -- "1" Client
+@enduml
+
+@startuml
+class ProjectAllocation {
+    - Employee employee
+    - Project project
+    - double allocationPercentage
+    ---
+    + ProjectAllocation()
+}
+
+class Employee
+class Project
+
+' Associations (aggregation/composition by reference)
+/'ProjectAllocation "1" -- "1" Employee'/
+/'ProjectAllocation "1" -- "1" Project'/
+@enduml
