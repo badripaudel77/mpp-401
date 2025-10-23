@@ -72,7 +72,7 @@ public class ClientRepository {
             ps.setString(3, client.getContactPerson());
             ps.setString(4, client.getContactPhone());
             ps.setString(5, client.getContactEmail());
-            ps.setLong(4, id);
+            ps.setLong(6, id);
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected == 0) {
                 System.out.println("No client found with ID: " + id);

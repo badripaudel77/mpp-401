@@ -28,6 +28,7 @@ public class DepartmentRepository {
             ps.setString(1, dept.getName());
             ps.setString(2, dept.getLocation());
             ps.setDouble(3, dept.getAnnualBudget());
+            ps.executeUpdate();
             System.out.println("Department created.");
         }
     }
